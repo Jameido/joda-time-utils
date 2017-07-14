@@ -24,7 +24,11 @@ import java.util.Calendar;
  * Created by Luca Rossi on 13/07/2017.
  */
 
-public class JodaDatePicker extends DatePicker {
+public class JodaDatePicker extends DatePicker
+implements DatePicker.OnDateChangedListener {
+
+    private OnDateChangedListener mOnDateChangedListener;
+
     public JodaDatePicker(Context context) {
         super(context);
     }
@@ -64,12 +68,24 @@ public class JodaDatePicker extends DatePicker {
      *                    to (0-11 for compatibility with {@link Calendar#MONTH})
      */
     public void init(DateTime date) {
+        init(date, null);
+    }
+
+
+    public void init(DateTime date, OnDateChangedListener onDateChangedListener) {
         if(date == null){
             date = new DateTime();
         }
-        super.init(date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth(), null);
+        super.init(date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth(), this);
+        mOnDateChangedListener = onDateChangedListener;
     }
 
+    @Override
+    public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+        if(null != mOnDateChangedListener){
+            mOnDateChangedListener.onDateChanged(this, new DateTime(getYear(), getMonth(), getDayOfMonth(), 0, 0));
+        }
+    }
 
 
     /**
@@ -86,5 +102,9 @@ public class JodaDatePicker extends DatePicker {
      */
     public void updateDate(DateTime date) {
         super.updateDate(date.getYear(), date.getMonthOfYear() - 1, date.getDayOfMonth());
+    }
+
+    public interface OnDateChangedListener{
+        void onDateChanged(JodaDatePicker datePicker, DateTime date);
     }
 }
