@@ -1,3 +1,18 @@
 <resources>
-    <string name="app_name">Demo</string>
+    <string name="app_name">Joda Time Utils Demo</string>
+    <string name="select_date_format">Select Date Format</string>
+    <string name="date_picker">Date Picker</string>
+    <string name="range_picker">Range Picker</string>
+    <string name="button_open_date_picker">Open Date Picker</string>
+    <string name="button_open_range_picker">Open Range Picker</string>
+    <string name="ph_range_from">From:</string>
+    <string name="ph_range_to">To:</string>
+    <string name="range_from" formatted="false">From: %s</string>
+    <string name="range_to" formatted="false">To: %s</string>
+
+    <string-array name="date_formats">
+        <item>dd/MM/yyyy</item>
+        <item>EEE, d MMM yyyy</item>
+        <item>MM/dd/yyyy</item>
+    </string-array>
 </resources>
