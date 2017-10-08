@@ -27,30 +27,31 @@ public class DateRangePagerAdapter extends PagerAdapter {
 
     private Context mContext;
 
-    private DateTime mStartDate;
-    private DateTime mEndDate;
+    private DateTime mDateFrom;
+    private DateTime mDateTo;
 
-    private JodaDatePicker mStartDatePicker;
-    private JodaDatePicker mEndDatePicker;
+    private JodaDatePicker mDateFromPicker;
+    private JodaDatePicker mDateToPicker;
+    private OnDateRangeChangedListener mOnDateRangeChangedListener;
 
-    public DateRangePagerAdapter(Context context) {
+    DateRangePagerAdapter(Context context) {
         this(context, null, null);
     }
 
-    public DateRangePagerAdapter(Context context, DateTime startDate, DateTime endDate) {
+    DateRangePagerAdapter(Context context, DateTime dateFrom, DateTime dateTo) {
         mContext = context;
-        if (null == startDate && null == endDate) {
-            mStartDate = DateTime.now();
-            mEndDate = mStartDate.plusDays(1);
-        } else if (null == startDate) {
-            mEndDate = endDate;
-            mStartDate = endDate.minusDays(1);
-        } else if (null == endDate || endDate.isBefore(mStartDate) ) {
-            mStartDate = startDate;
-            mEndDate = mStartDate.plusDays(1);
+        if (null == dateFrom && null == dateTo) {
+            mDateFrom = DateTime.now();
+            mDateTo = mDateFrom.plusDays(1);
+        } else if (null == dateFrom) {
+            mDateTo = dateTo;
+            mDateFrom = dateTo.minusDays(1);
+        } else if (null == dateTo || dateTo.isBefore(mDateFrom) ) {
+            mDateFrom = dateFrom;
+            mDateTo = mDateFrom.plusDays(1);
         }else {
-            mStartDate = startDate;
-            mEndDate = endDate;
+            mDateFrom = dateFrom;
+            mDateTo = dateTo;
         }
     }
 
@@ -58,57 +59,28 @@ public class DateRangePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         switch (position) {
             case 0:
-                if (null == mStartDatePicker) {
-                    initStartDatePicker(container);
+                if (null == mDateFromPicker) {
+                    initDateFromPicker(container);
                 }
-                return mStartDatePicker;
+                return mDateFromPicker;
             case 1:
-                if (null == mEndDatePicker) {
-                    initEndDatePicker(container);
+                if (null == mDateToPicker) {
+                    initDateToPicker(container);
                 }
-                return mEndDatePicker;
+                return mDateToPicker;
             default:
                 return null;
         }
-    }
-
-    private void initStartDatePicker(ViewGroup container) {
-        mStartDatePicker = new JodaDatePicker(container.getContext());
-        mStartDatePicker.init(mStartDate, new JodaDatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
-                mStartDate = date;
-                mEndDatePicker.setMinDate(0);
-                mEndDatePicker.setMinDate(mStartDate.getMillis());
-            }
-        });
-        mStartDatePicker.setMaxDate(mEndDate.getMillis());
-        container.addView(mStartDatePicker);
-    }
-
-
-    private void initEndDatePicker(ViewGroup container) {
-        mEndDatePicker = new JodaDatePicker(container.getContext());
-        mEndDatePicker.init(mEndDate, new JodaDatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
-                mEndDate = date;
-                mStartDatePicker.setMaxDate(Long.MAX_VALUE);
-                mStartDatePicker.setMaxDate(mEndDate.getMillis());
-            }
-        });
-        mEndDatePicker.setMinDate(mStartDate.getMillis());
-        container.addView(mEndDatePicker);
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         switch (position) {
             case 0:
-                mStartDatePicker = null;
+                mDateFromPicker = null;
                 break;
             case 1:
-                mEndDatePicker = null;
+                mDateToPicker = null;
                 break;
         }
         container.removeView((View) object);
@@ -136,11 +108,55 @@ public class DateRangePagerAdapter extends PagerAdapter {
         }
     }
 
-    public DateTime getStartDate() {
-        return mStartDate;
+    private void initDateFromPicker(ViewGroup container) {
+        mDateFromPicker = new JodaDatePicker(container.getContext());
+        mDateFromPicker.init(mDateFrom, new JodaDatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
+                mDateFrom = date;
+                mDateToPicker.setMinDate(0);
+                mDateToPicker.setMinDate(mDateFrom.getMillis());
+                if(null != mOnDateRangeChangedListener){
+                    mOnDateRangeChangedListener.onDateFromChanged(date);
+                }
+            }
+        });
+        mDateFromPicker.setMaxDate(mDateTo.getMillis());
+        container.addView(mDateFromPicker);
     }
 
-    public DateTime getEndDate() {
-        return mEndDate;
+
+    private void initDateToPicker(ViewGroup container) {
+        mDateToPicker = new JodaDatePicker(container.getContext());
+        mDateToPicker.init(mDateTo, new JodaDatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
+                mDateTo = date;
+                mDateFromPicker.setMaxDate(Long.MAX_VALUE);
+                mDateFromPicker.setMaxDate(mDateTo.getMillis());
+                if(null != mOnDateRangeChangedListener){
+                    mOnDateRangeChangedListener.onDateToChanged(date);
+                }
+            }
+        });
+        mDateToPicker.setMinDate(mDateFrom.getMillis());
+        container.addView(mDateToPicker);
+    }
+
+    DateTime getDateFrom() {
+        return mDateFrom;
+    }
+
+    DateTime getDateTo() {
+        return mDateTo;
+    }
+
+    public void setmOnDateRangeChangedListener(OnDateRangeChangedListener mOnDateRangeChangedListener) {
+        this.mOnDateRangeChangedListener = mOnDateRangeChangedListener;
+    }
+
+    interface OnDateRangeChangedListener {
+        void onDateFromChanged(DateTime date);
+        void onDateToChanged(DateTime date);
     }
 }

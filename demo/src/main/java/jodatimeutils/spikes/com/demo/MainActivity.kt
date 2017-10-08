@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun openRangePicker() {
         JodaDateRangePickerDialog(this,
-                JodaDateRangePickerDialog.OnRangeSelectedListener { startDate, endDate ->
-                    mDateFrom = startDate
-                    mDateTo = endDate
+                JodaDateRangePickerDialog.OnRangeSelectedListener { dateFrom, dateTo ->
+                    mDateFrom = dateFrom
+                    mDateTo = dateTo
                     val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter?.getItem(mSpinnerDateFormat!!.selectedItemPosition))
                     changeTextFrom(formatter)
                     changeTextTo(formatter)

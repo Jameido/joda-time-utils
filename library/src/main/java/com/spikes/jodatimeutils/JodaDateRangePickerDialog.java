@@ -31,7 +31,7 @@ import org.joda.time.DateTime;
  */
 
 public class JodaDateRangePickerDialog extends AlertDialog
-        implements DialogInterface.OnClickListener {
+        implements DialogInterface.OnClickListener, DateRangePagerAdapter.OnDateRangeChangedListener {
 
     private static final String EXTRA_START = "EXTRA_START";
     private static final String EXTRA_END = "EXTRA_END";
@@ -49,16 +49,16 @@ public class JodaDateRangePickerDialog extends AlertDialog
         this(context, listener, null, null);
     }
 
-    public JodaDateRangePickerDialog(@NonNull Context context, @Nullable DateTime startDate, @Nullable DateTime endDate) {
-        this(context, null, startDate, endDate);
+    public JodaDateRangePickerDialog(@NonNull Context context, @Nullable DateTime dateFrom, @Nullable DateTime dateTo) {
+        this(context, null, dateFrom, dateTo);
     }
 
-    public JodaDateRangePickerDialog(@NonNull Context context, @Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener, @Nullable DateTime startDate, @Nullable DateTime endDate) {
-        this(context, 0, listener, startDate, endDate);
+    public JodaDateRangePickerDialog(@NonNull Context context, @Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener, @Nullable DateTime dateFrom, @Nullable DateTime dateTo) {
+        this(context, 0, listener, dateFrom, dateTo);
     }
 
     public JodaDateRangePickerDialog(@NonNull Context context, @StyleRes int themeResId,
-                                     @Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener, @Nullable DateTime startDate, @Nullable DateTime endDate) {
+                                     @Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener, @Nullable DateTime dateFrom, @Nullable DateTime dateTo) {
         super(context, themeResId);
         mOnRangeSelectedListener = listener;
 
@@ -70,11 +70,12 @@ public class JodaDateRangePickerDialog extends AlertDialog
         setButton(BUTTON_POSITIVE, themeContext.getString(android.R.string.ok), this);
         setButton(BUTTON_NEGATIVE, themeContext.getString(android.R.string.cancel), this);
 
-        mViewPagerRange = (ViewPager) view.findViewById(R.id.view_pager_ranges);
-        mDateRangePagerAdapter = new DateRangePagerAdapter(themeContext, startDate, endDate);
+        mViewPagerRange = view.findViewById(R.id.view_pager_ranges);
+        mDateRangePagerAdapter = new DateRangePagerAdapter(themeContext, dateFrom, dateTo);
+        mDateRangePagerAdapter.setmOnDateRangeChangedListener(this);
         mViewPagerRange.setAdapter(mDateRangePagerAdapter);
 
-        mTabLayout = (TabLayout) view.findViewById(R.id.tabs_date_range);
+        mTabLayout = view.findViewById(R.id.tabs_date_range);
         mTabLayout.setupWithViewPager(mViewPagerRange);
     }
 
@@ -101,7 +102,7 @@ public class JodaDateRangePickerDialog extends AlertDialog
         switch (which) {
             case BUTTON_POSITIVE:
                 if (mOnRangeSelectedListener != null) {
-                    mOnRangeSelectedListener.onRangeSelected(mDateRangePagerAdapter.getStartDate(), mDateRangePagerAdapter.getEndDate());
+                    mOnRangeSelectedListener.onRangeSelected(mDateRangePagerAdapter.getDateFrom(), mDateRangePagerAdapter.getDateTo());
                 }
                 break;
             case BUTTON_NEGATIVE:
@@ -110,11 +111,21 @@ public class JodaDateRangePickerDialog extends AlertDialog
         }
     }
 
+    @Override
+    public void onDateFromChanged(DateTime date) {
+        mViewPagerRange.setCurrentItem(1);
+    }
+
+    @Override
+    public void onDateToChanged(DateTime date) {
+
+    }
+
     public void setOnRangeSelectedListener(@Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener) {
         mOnRangeSelectedListener = listener;
     }
 
     public interface OnRangeSelectedListener {
-        public void onRangeSelected(DateTime startDate, DateTime endDate);
+        void onRangeSelected(DateTime dateFrom, DateTime dateTo);
     }
 }
