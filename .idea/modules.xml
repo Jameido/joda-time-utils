@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/joda-time-android-utils.iml" filepath="$PROJECT_DIR$/joda-time-android-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://D:\Projects\GitHub\Android\joda-time-android-utils\library\library.iml" filepath="D:\Projects\GitHub\Android\joda-time-android-utils\library\library.iml" />
     </modules>
   </component>
 </project>
