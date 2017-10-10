@@ -26,7 +26,7 @@ import android.widget.DatePicker;
 import org.joda.time.DateTime;
 
 /**
- * Created by Luca Rossi on 13/07/2017.
+ * Created by Jameido on 13/07/2017.
  */
 
 public class JodaDatePickerDialog extends AlertDialog

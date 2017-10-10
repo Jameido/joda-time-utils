@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import java.util.Calendar;
 
 /**
- * Created by Luca Rossi on 13/07/2017.
+ * Created by Jameido on 13/07/2017.
  */
 
 public class JodaDatePicker extends DatePicker

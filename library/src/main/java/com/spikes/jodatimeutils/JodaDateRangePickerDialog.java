@@ -27,7 +27,7 @@ import android.view.View;
 import org.joda.time.DateTime;
 
 /**
- * Created by Luca Rossi on 14/07/2017.
+ * Created by Jameido on 14/07/2017.
  */
 
 public class JodaDateRangePickerDialog extends AlertDialog
