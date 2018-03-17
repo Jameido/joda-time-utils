@@ -36,7 +36,7 @@ class DatePicker @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : BasePicker(context, attrs, defStyleAttr), BasePicker.OnDateChangedListener {
 
-    var onDateChanged: (picker: DatePicker, date: DateTime) -> Unit =
+    var onDateChangedListener: (picker: DatePicker, date: DateTime) -> Unit =
             { _: DatePicker, _: DateTime -> }
 
     /**
@@ -49,7 +49,7 @@ class DatePicker @JvmOverloads constructor(
     }
 
     override fun onDateChanged(p0: BasePicker?, year: Int, month: Int, day: Int) {
-        onDateChanged(this, DateTime(year, month + 1, day, 0, 0))
+        onDateChangedListener(this, DateTime(year, month + 1, day, 0, 0))
     }
 
     fun init(date: DateTime) {

@@ -29,7 +29,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
-import pro.eluzivespikes.jodatimeutils.R
 import org.joda.time.DateTime
 
 /**
@@ -45,7 +44,7 @@ class DatePickerDialog(context: Context, date: DateTime = DateTime())
             { _: DatePicker, _: DateTime -> }
 
     init {
-        val v = LayoutInflater.from(context).inflate(R.layout.joda_date_picker_dialog, null)
+        val v = LayoutInflater.from(context).inflate(R.layout.joda_date_picker, null)
         setView(v)
         mDatePicker = v.findViewById(R.id.date_picker)!!
         mDatePicker.init(date)

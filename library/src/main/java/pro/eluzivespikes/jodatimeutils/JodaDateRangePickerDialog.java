@@ -36,6 +36,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 import pro.eluzivespikes.jodatimeutils.R;
 
 import org.joda.time.DateTime;
@@ -45,14 +47,14 @@ import org.joda.time.DateTime;
  */
 
 public class JodaDateRangePickerDialog extends AlertDialog
-        implements DialogInterface.OnClickListener, DateRangePagerAdapter.OnDateRangeChangedListener {
+        implements DialogInterface.OnClickListener {
 
     private static final String EXTRA_START = "EXTRA_START";
     private static final String EXTRA_END = "EXTRA_END";
 
     private ViewPager mViewPagerRange;
     private TabLayout mTabLayout;
-    private DateRangePagerAdapter mDateRangePagerAdapter;
+    private RangePagerAdapter mDateRangePagerAdapter;
     private OnRangeSelectedListener mOnRangeSelectedListener;
 
     public JodaDateRangePickerDialog(@NonNull Context context) {
@@ -85,8 +87,20 @@ public class JodaDateRangePickerDialog extends AlertDialog
         setButton(BUTTON_NEGATIVE, themeContext.getString(android.R.string.cancel), this);
 
         mViewPagerRange = view.findViewById(R.id.view_pager_ranges);
-        mDateRangePagerAdapter = new DateRangePagerAdapter(themeContext, dateFrom, dateTo);
-        mDateRangePagerAdapter.setmOnDateRangeChangedListener(this);
+        mDateRangePagerAdapter = new RangePagerAdapter(themeContext, dateFrom, dateTo);
+        mDateRangePagerAdapter.setOnFromChanged(new Function2<DateTime, DateTime, Unit>() {
+            @Override
+            public Unit invoke(DateTime dateTime, DateTime dateTime2) {
+                mViewPagerRange.setCurrentItem(1);
+                return null;
+            }
+        });
+        mDateRangePagerAdapter.setOnToChanged(new Function2<DateTime, DateTime, Unit>() {
+            @Override
+            public Unit invoke(DateTime dateTime, DateTime dateTime2) {
+                return null;
+            }
+        });
         mViewPagerRange.setAdapter(mDateRangePagerAdapter);
 
         mTabLayout = view.findViewById(R.id.tabs_date_range);
@@ -116,16 +130,6 @@ public class JodaDateRangePickerDialog extends AlertDialog
                 cancel();
                 break;
         }
-    }
-
-    @Override
-    public void onDateFromChanged(DateTime date) {
-        mViewPagerRange.setCurrentItem(1);
-    }
-
-    @Override
-    public void onDateToChanged(DateTime date) {
-
     }
 
     public void setOnRangeSelectedListener(@Nullable JodaDateRangePickerDialog.OnRangeSelectedListener listener) {
