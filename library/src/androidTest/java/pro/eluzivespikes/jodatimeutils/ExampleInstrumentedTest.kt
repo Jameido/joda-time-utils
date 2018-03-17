@@ -22,20 +22,26 @@
  * SOFTWARE.
  */
 
-package pro.eluzivespikes.jodatimeutils;
+package pro.eluzivespikes.jodatimeutils
 
-import org.junit.Test;
+import android.support.test.InstrumentationRegistry
+import android.support.test.runner.AndroidJUnit4
+import org.junit.Test
+import org.junit.runner.RunWith
 
-import static org.junit.Assert.*;
+import org.junit.Assert.*
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * Created by Luca Rossi on 17/03/2018.
  */
-public class ExampleUnitTest {
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
     @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+    @Throws(Exception::class)
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getTargetContext()
+
+        assertEquals("pro.eluzivespikes.jodatimeutils.test", appContext.packageName)
     }
 }

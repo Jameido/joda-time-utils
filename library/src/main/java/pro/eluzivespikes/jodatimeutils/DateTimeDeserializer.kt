@@ -22,29 +22,33 @@
  * SOFTWARE.
  */
 
-package pro.eluzivespikes.jodatimeutils;
+package pro.eluzivespikes.jodatimeutils
 
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
+import com.google.gson.*
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.ISODateTimeFormat
+import java.lang.reflect.Type
 
 /**
- * Instrumentation test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * Created by Luca Rossi on 17/03/2018.
  */
-@RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
+class DateTimeDeserializer(var dateTimeFormatter: DateTimeFormatter = ISODateTimeFormat.basicDateTime()) : JsonDeserializer<DateTime?>, JsonSerializer<DateTime> {
 
-        assertEquals("pro.eluzivespikes.jodatimeutils.test", appContext.getPackageName());
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): DateTime? {
+        val jsonString = json?.asString
+        return if (jsonString != null && jsonString.isNotEmpty()) {
+            dateTimeFormatter.parseDateTime(jsonString)
+        } else {
+            null
+        }
+    }
+
+    override fun serialize(src: DateTime?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        return JsonPrimitive(if (src != null) {
+            dateTimeFormatter.print(src)
+        } else {
+            ""
+        })
     }
 }
