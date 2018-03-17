@@ -13,11 +13,16 @@
 package com.spikes.jodatimeutils;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
 
 /**
  * Created by Luca Rossi on 14/07/2017.
@@ -30,8 +35,8 @@ public class DateRangePagerAdapter extends PagerAdapter {
     private DateTime mDateFrom;
     private DateTime mDateTo;
 
-    private JodaDatePicker mDateFromPicker;
-    private JodaDatePicker mDateToPicker;
+    private DatePicker mDateFromPicker;
+    private DatePicker mDateToPicker;
     private OnDateRangeChangedListener mOnDateRangeChangedListener;
 
     DateRangePagerAdapter(Context context) {
@@ -46,10 +51,10 @@ public class DateRangePagerAdapter extends PagerAdapter {
         } else if (null == dateFrom) {
             mDateTo = dateTo;
             mDateFrom = dateTo.minusDays(1);
-        } else if (null == dateTo || dateTo.isBefore(mDateFrom) ) {
+        } else if (null == dateTo || dateTo.isBefore(mDateFrom)) {
             mDateFrom = dateFrom;
             mDateTo = mDateFrom.plusDays(1);
-        }else {
+        } else {
             mDateFrom = dateFrom;
             mDateTo = dateTo;
         }
@@ -109,16 +114,18 @@ public class DateRangePagerAdapter extends PagerAdapter {
     }
 
     private void initDateFromPicker(ViewGroup container) {
-        mDateFromPicker = new JodaDatePicker(container.getContext());
-        mDateFromPicker.init(mDateFrom, new JodaDatePicker.OnDateChangedListener() {
+        mDateFromPicker = new DatePicker(container.getContext());
+        mDateFromPicker.init(mDateFrom);
+        mDateFromPicker.setOnDateChanged(new Function2<DatePicker, DateTime, Unit>() {
             @Override
-            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
-                mDateFrom = date;
+            public Unit invoke(DatePicker datePicker, DateTime dateTime) {
+                mDateFrom = dateTime;
                 mDateToPicker.setMinDate(0);
                 mDateToPicker.setMinDate(mDateFrom.getMillis());
-                if(null != mOnDateRangeChangedListener){
-                    mOnDateRangeChangedListener.onDateFromChanged(date);
+                if (null != mOnDateRangeChangedListener) {
+                    mOnDateRangeChangedListener.onDateFromChanged(dateTime);
                 }
+                return null;
             }
         });
         mDateFromPicker.setMaxDate(mDateTo.getMillis());
@@ -127,16 +134,18 @@ public class DateRangePagerAdapter extends PagerAdapter {
 
 
     private void initDateToPicker(ViewGroup container) {
-        mDateToPicker = new JodaDatePicker(container.getContext());
-        mDateToPicker.init(mDateTo, new JodaDatePicker.OnDateChangedListener() {
+        mDateToPicker = new DatePicker(container.getContext());
+        mDateToPicker.init(mDateTo);
+        mDateToPicker.setOnDateChanged(new Function2<DatePicker, DateTime, Unit>() {
             @Override
-            public void onDateChanged(JodaDatePicker datePicker, DateTime date) {
-                mDateTo = date;
+            public Unit invoke(DatePicker datePicker, DateTime dateTime) {
+                mDateTo = dateTime;
                 mDateFromPicker.setMaxDate(Long.MAX_VALUE);
                 mDateFromPicker.setMaxDate(mDateTo.getMillis());
-                if(null != mOnDateRangeChangedListener){
-                    mOnDateRangeChangedListener.onDateToChanged(date);
+                if (null != mOnDateRangeChangedListener) {
+                    mOnDateRangeChangedListener.onDateToChanged(dateTime);
                 }
+                return null;
             }
         });
         mDateToPicker.setMinDate(mDateFrom.getMillis());
@@ -157,6 +166,7 @@ public class DateRangePagerAdapter extends PagerAdapter {
 
     interface OnDateRangeChangedListener {
         void onDateFromChanged(DateTime date);
+
         void onDateToChanged(DateTime date);
     }
 }

@@ -82,19 +82,12 @@ public class JodaDateRangePickerDialog extends AlertDialog
     @Override
     public Bundle onSaveInstanceState() {
         final Bundle state = super.onSaveInstanceState();
-        /*state.putInt(EXTRA_YEAR, mDatePicker.getYear());
-        state.putInt(EXTRA_MONTH, mDatePicker.getMonth());
-        state.putInt(EXTRA_DAY, mDatePicker.getDayOfMonth());*/
         return state;
     }
 
     @Override
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        /*final int year = savedInstanceState.getInt(EXTRA_YEAR);
-        final int month = savedInstanceState.getInt(EXTRA_MONTH);
-        final int day = savedInstanceState.getInt(EXTRA_DAY);
-        mDatePicker.init(new DateTime(year, month, day, 0, 0));*/
     }
 
     @Override

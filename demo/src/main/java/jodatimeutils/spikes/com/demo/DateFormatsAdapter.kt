@@ -26,7 +26,7 @@ import org.joda.time.format.DateTimeFormat
 /**
  * Created by Jameido on 08/10/2017.
  */
-class DateFormatsAdapter(context: Context?, objects: Array<out String>?) :
+class DateFormatsAdapter(context: Context, objects: Array<out String>) :
         ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, objects) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

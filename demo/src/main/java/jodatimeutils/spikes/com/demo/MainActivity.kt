@@ -19,10 +19,11 @@ import android.support.v7.widget.AppCompatSpinner
 import android.support.v7.widget.AppCompatTextView
 import android.view.View
 import android.widget.AdapterView
-import com.spikes.jodatimeutils.JodaDatePickerDialog
-import com.spikes.jodatimeutils.JodaDateRangePickerDialog
 import java.util.*
 import android.widget.AdapterView.OnItemSelectedListener
+import com.spikes.jodatimeutils.DatePicker
+import com.spikes.jodatimeutils.DatePickerDialog
+import com.spikes.jodatimeutils.JodaDateRangePickerDialog
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
@@ -30,12 +31,12 @@ import org.joda.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
-    private var mDateFormatsAdapter: DateFormatsAdapter? = null
-    private var mSpinnerDateFormat: AppCompatSpinner? = null
+    private lateinit var mDateFormatsAdapter: DateFormatsAdapter
+    private lateinit var mSpinnerDateFormat: AppCompatSpinner
 
-    private var mTextSelectedDate: AppCompatTextView? = null
-    private var mTextSelectedRangeFrom: AppCompatTextView? = null
-    private var mTextSelectedRangeTo: AppCompatTextView? = null
+    private lateinit var mTextSelectedDate: AppCompatTextView
+    private lateinit var mTextSelectedRangeFrom: AppCompatTextView
+    private lateinit var mTextSelectedRangeTo: AppCompatTextView
 
     private var mSelectedDate: DateTime = DateTime.now()
     private var mDateFrom: DateTime = DateTime.now()
@@ -60,15 +61,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDateFormatSpinner() {
         mDateFormatsAdapter = DateFormatsAdapter(this, resources.getStringArray(R.array.date_formats))
-        mSpinnerDateFormat?.adapter = mDateFormatsAdapter
-        mSpinnerDateFormat?.onItemSelectedListener = object : OnItemSelectedListener {
+        mSpinnerDateFormat.adapter = mDateFormatsAdapter
+        mSpinnerDateFormat.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View, position: Int, id: Long) {
-                val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter?.getItem(position))
+                val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(position))
                 changeAllTextDates(formatter)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
-                val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter?.getItem(0))
+                val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(0))
                 changeAllTextDates(formatter)
             }
 
@@ -76,14 +77,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDatePicker() {
-        JodaDatePickerDialog(this,
-                JodaDatePickerDialog.OnDateSetListener { _, date ->
-                    mSelectedDate = date
-                    val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter?.getItem(mSpinnerDateFormat!!.selectedItemPosition))
-                    changeTextSelected(formatter)
-                },
-                mSelectedDate)
-                .show()
+
+        val datePickerDialog = DatePickerDialog(this, mSelectedDate)
+        datePickerDialog.onDatePicked = { _: DatePicker, date: DateTime ->
+            mSelectedDate = date
+            val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(mSpinnerDateFormat.selectedItemPosition))
+            changeTextSelected(formatter)
+        }
+        datePickerDialog.show()
     }
 
     private fun openRangePicker() {
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 JodaDateRangePickerDialog.OnRangeSelectedListener { dateFrom, dateTo ->
                     mDateFrom = dateFrom
                     mDateTo = dateTo
-                    val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter?.getItem(mSpinnerDateFormat!!.selectedItemPosition))
+                    val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(mSpinnerDateFormat.selectedItemPosition))
                     changeTextFrom(formatter)
                     changeTextTo(formatter)
                 },
@@ -107,14 +108,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeTextSelected(formatter: DateTimeFormatter) {
-        mTextSelectedDate?.text = formatter.print(mSelectedDate)
+        mTextSelectedDate.text = formatter.print(mSelectedDate)
     }
 
     private fun changeTextFrom(formatter: DateTimeFormatter) {
-        mTextSelectedRangeFrom?.text = String.format(Locale.getDefault(), getString(R.string.range_from), formatter.print(mDateFrom))
+        mTextSelectedRangeFrom.text = String.format(Locale.getDefault(), getString(R.string.range_from), formatter.print(mDateFrom))
     }
 
     private fun changeTextTo(formatter: DateTimeFormatter) {
-        mTextSelectedRangeTo?.text = String.format(Locale.getDefault(), getString(R.string.range_to), formatter.print(mDateTo))
+        mTextSelectedRangeTo.text = String.format(Locale.getDefault(), getString(R.string.range_to), formatter.print(mDateTo))
     }
 }
