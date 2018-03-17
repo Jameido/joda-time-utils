@@ -35,10 +35,10 @@ import java.util.*
 import android.widget.AdapterView.OnItemSelectedListener
 import pro.eluzivespikes.jodatimeutils.DatePicker
 import pro.eluzivespikes.jodatimeutils.DatePickerDialog
-import pro.eluzivespikes.jodatimeutils.JodaDateRangePickerDialog
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import pro.eluzivespikes.jodatimeutils.DateRangePickerDialog
 
 
 class MainActivity : AppCompatActivity() {
@@ -100,17 +100,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openRangePicker() {
-        JodaDateRangePickerDialog(this,
-                JodaDateRangePickerDialog.OnRangeSelectedListener { dateFrom, dateTo ->
-                    mDateFrom = dateFrom
-                    mDateTo = dateTo
-                    val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(mSpinnerDateFormat.selectedItemPosition))
-                    changeTextFrom(formatter)
-                    changeTextTo(formatter)
-                },
+        val rangeDialog = DateRangePickerDialog(
+                this,
                 mDateFrom,
-                mDateTo)
-                .show()
+                mDateTo
+        )
+        rangeDialog.onRangeSelected = { dateFrom: DateTime, dateTo: DateTime ->
+            mDateFrom = dateFrom
+            mDateTo = dateTo
+            val formatter = DateTimeFormat.forPattern(mDateFormatsAdapter.getItem(mSpinnerDateFormat.selectedItemPosition))
+            changeTextFrom(formatter)
+            changeTextTo(formatter)
+        }
+
+        rangeDialog.show()
     }
 
     private fun changeAllTextDates(formatter: DateTimeFormatter) {
