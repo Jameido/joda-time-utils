@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/spacing_default"
-    tools:context="jodatimeutils.spikes.com.demo.MainActivity">
+    tools:context="pro.eluzivespikes.jodatimeutils.demo.pro.spikes.com.demo.MainActivity">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/text_select_format"
