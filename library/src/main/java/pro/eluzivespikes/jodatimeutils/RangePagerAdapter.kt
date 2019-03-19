@@ -25,7 +25,7 @@
 package pro.eluzivespikes.jodatimeutils
 
 import android.content.Context
-import android.support.v4.view.PagerAdapter
+import androidx.viewpager.widget.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,34 +34,30 @@ import org.joda.time.DateTime
 /**
  * Created by Luca Rossi on 17/03/2018.
  */
-class RangePagerAdapter(private var context: Context, var dateFrom: DateTime = DateTime.now().minusDays(1), var dateTo: DateTime = DateTime.now()) : PagerAdapter() {
+class RangePagerAdapter(private var context: Context, var dateFrom: DateTime = DateTime.now().minusDays(1), var dateTo: DateTime = DateTime.now()) : androidx.viewpager.widget.PagerAdapter() {
 
-    private var mPickerFrom: DatePicker? = null
-    private var mPickerTo: DatePicker? = null
+    private var mPickerFrom: DatePicker = DatePicker(context)
+    private var mPickerTo: DatePicker = DatePicker(context)
 
     var onFromChanged: (dateFrom: DateTime, dateTo: DateTime) -> Unit = { _, _ -> }
     var onToChanged: (dateFrom: DateTime, dateTo: DateTime) -> Unit = { _, _ -> }
 
-    override fun instantiateItem(container: ViewGroup, position: Int): Any? {
+    override fun instantiateItem(container: ViewGroup, position: Int): Any {
         return when (position) {
             0 -> {
-                if (mPickerFrom == null) {
-                    initPickerFrom(container)
-                }
-                mPickerFrom
+                initPickerFrom(container)
+                return mPickerFrom
             }
             1 -> {
-                if (mPickerTo == null) {
-                    initPickerTo(container)
-                }
-                mPickerTo
+                initPickerTo(container)
+                return mPickerTo
             }
             else -> super.instantiateItem(container, position)
         }
     }
 
-    override fun isViewFromObject(view: View?, obj: Any?): Boolean {
-        return view === obj
+    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+        return view === `object`
     }
 
     override fun getCount(): Int {
@@ -77,28 +73,34 @@ class RangePagerAdapter(private var context: Context, var dateFrom: DateTime = D
     }
 
     private fun initPickerFrom(container: ViewGroup) {
-        mPickerFrom = LayoutInflater.from(context).inflate(R.layout.joda_date_picker, container, false) as DatePicker
-        mPickerFrom?.init(dateFrom)
-        mPickerFrom?.maxDate = dateTo.millis
-        mPickerFrom?.onDateChangedListener = { _, date ->
-            dateFrom = date
-            mPickerTo?.minDate = 0
-            mPickerTo?.minDate = dateFrom.millis
-            onFromChanged.invoke(dateFrom, dateTo)
+        if (container.findViewById<View>(R.id.picker_from) == null) {
+            mPickerFrom = LayoutInflater.from(context).inflate(R.layout.joda_date_picker, container, false) as DatePicker
+            mPickerFrom.id = R.id.picker_from
+            mPickerFrom.init(dateFrom)
+            mPickerFrom.maxDate = dateTo.millis
+            mPickerFrom.onDateChangedListener = { _, date ->
+                dateFrom = date
+                mPickerTo.minDate = 0
+                mPickerTo.minDate = dateFrom.millis
+                onFromChanged.invoke(dateFrom, dateTo)
+            }
+            container.addView(mPickerFrom)
         }
-        container.addView(mPickerFrom)
     }
 
     private fun initPickerTo(container: ViewGroup) {
-        mPickerTo = LayoutInflater.from(context).inflate(R.layout.joda_date_picker, container, false) as DatePicker
-        mPickerTo?.init(dateTo)
-        mPickerTo?.minDate = dateFrom.millis
-        mPickerTo?.onDateChangedListener = { _, date ->
-            dateTo = date
-            mPickerFrom?.maxDate = Long.MAX_VALUE
-            mPickerFrom?.maxDate = dateTo.millis
-            onToChanged.invoke(dateFrom, dateTo)
+        if (container.findViewById<View>(R.id.picker_to) == null) {
+            mPickerTo = LayoutInflater.from(context).inflate(R.layout.joda_date_picker, container, false) as DatePicker
+            mPickerTo.id = R.id.picker_to
+            mPickerTo.init(dateTo)
+            mPickerTo.minDate = dateFrom.millis
+            mPickerTo.onDateChangedListener = { _, date ->
+                dateTo = date
+                mPickerFrom.maxDate = Long.MAX_VALUE
+                mPickerFrom.maxDate = dateTo.millis
+                onToChanged.invoke(dateFrom, dateTo)
+            }
+            container.addView(mPickerTo)
         }
-        container.addView(mPickerTo)
     }
 }

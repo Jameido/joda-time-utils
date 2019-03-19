@@ -26,9 +26,9 @@ package pro.eluzivespikes.jodatimeutils
 
 import android.content.Context
 import android.content.DialogInterface
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AlertDialog
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import org.joda.time.DateTime
 
@@ -40,7 +40,7 @@ class DateRangePickerDialog(context: Context, dateFrom: DateTime = DateTime.now(
 
     var onRangeSelected: (dateFrom: DateTime, dateto: DateTime) -> Unit = { _, _ -> }
 
-    private val mViewPager: ViewPager
+    private val mViewPager: androidx.viewpager.widget.ViewPager
     private val mTabLayout: TabLayout
     private val mAdapter: RangePagerAdapter
 

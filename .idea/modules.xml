@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\Projects\GitHub\Android\joda-time-android-utils\demo\app.iml" filepath="D:\Projects\GitHub\Android\joda-time-android-utils\demo\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
-      <module fileurl="file://$PROJECT_DIR$/joda-time-android-utils.iml" filepath="$PROJECT_DIR$/joda-time-android-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/joda-time-utils.iml" filepath="$PROJECT_DIR$/joda-time-utils.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
