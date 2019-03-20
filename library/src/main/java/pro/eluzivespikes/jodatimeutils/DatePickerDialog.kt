@@ -78,6 +78,14 @@ class DatePickerDialog(context: Context, date: DateTime = DateTime())
         }
     }
 
+    fun setMaxDate(date: DateTime) {
+        mDatePicker.maxDate = date.millis
+    }
+
+    fun setMinDate(date: DateTime) {
+        mDatePicker.minDate = date.millis
+    }
+
     fun changeDate(date: DateTime) {
         mDatePicker.changeDate(date)
     }
